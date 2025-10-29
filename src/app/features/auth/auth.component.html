@@ -1,0 +1,57 @@
+<div class="auth-page">
+  <div class="container page">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 col-xs-12">
+        <h1 class="text-xs-center">{{ title() }}</h1>
+        <p class="text-xs-center">
+          @if (authType() === 'register') {
+            <a [routerLink]="['/login']">Have an account?</a>
+          } @else {
+            <a [routerLink]="['/register']">Need an account?</a>
+          }
+        </p>
+
+        <app-list-errors [errors]="errors()"></app-list-errors>
+
+        <form [formGroup]="authForm" (ngSubmit)="submitForm()">
+          <fieldset [disabled]="isSubmitting()">
+            @if (authType() === 'register') {
+              <fieldset class="form-group">
+                <input
+                  formControlName="username"
+                  placeholder="Username"
+                  class="form-control form-control-lg"
+                  type="text" />
+              </fieldset>
+            }
+            <fieldset class="form-group">
+              <input
+                formControlName="email"
+                placeholder="Email"
+                class="form-control form-control-lg"
+                type="email" />
+              <div *ngIf="authForm.get('email')?.invalid && (authForm.get('email')?.dirty || authForm.get('email')?.touched)" class="text-danger">
+                <small *ngIf="authForm.get('email')?.errors?.['required']">Email is required.</small>
+                <small *ngIf="authForm.get('email')?.errors?.['email']">Please enter a valid email address.</small>
+              </div>
+            </fieldset>
+            <fieldset class="form-group">
+              <input
+                formControlName="password"
+                placeholder="Password"
+                class="form-control form-control-lg"
+                type="password" />
+              <div *ngIf="authForm.get('password')?.invalid && (authForm.get('password')?.dirty || authForm.get('password')?.touched)" class="text-danger">
+                <small *ngIf="authForm.get('password')?.errors?.['required']">Password is required.</small>
+                <small *ngIf="authForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters long.</small>
+              </div>
+            </fieldset>
+            <button class="btn btn-lg btn-primary pull-xs-right" [disabled]="!authForm.valid" type="submit">
+              {{ title() }}
+            </button>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
