@@ -1,0 +1,71 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css');
+@import url('//fonts.googleapis.com/css?family=Titillium+Web:700|Source+Serif+Pro:400,700|Merriweather+Sans:400,700|Source+Sans+Pro:400,300,600,700,300italic,400italic,600italic,700italic');
+@import url('//demo.productionready.io/main.css');
+
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.navbar {
+  padding: 0.5rem 1rem;
+}
+
+.navbar-light .navbar-brand {
+  color: #5CB85C;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1.5rem;
+  padding-top: 0;
+  margin-right: 2rem;
+}
+
+.nav-link {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.nav-link:hover {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.nav-link.active {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.user-pic {
+  height: 26px;
+  border-radius: 50px;
+  float: left;
+  margin-right: 5px;
+}
+
+.btn-outline-primary {
+  color: #5CB85C;
+  border-color: #5CB85C;
+}
+
+.btn-outline-primary:hover {
+  color: #fff;
+  background-color: #5CB85C;
+  border-color: #5CB85C;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #5CB85C;
+  border-color: #5CB85C;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background-color: #449d44;
+  border-color: #419641;
+}
