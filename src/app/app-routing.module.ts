@@ -4,6 +4,7 @@ import { AuthComponent } from './features/auth/auth.component';
 import { HomeComponent } from './features/home/home.component';
 import { EditorComponent } from './features/editor/editor.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { ArticleComponent } from './features/article/article.component';
 
 export const routes: Routes = [
   { path: 'login', component: AuthComponent },
@@ -11,6 +12,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'editor', component: EditorComponent, canActivate: [AuthGuard] },
   { path: 'editor/:slug', component: EditorComponent, canActivate: [AuthGuard] },
+  { path: 'article/:slug', component: ArticleComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   // { path: '**', component: NotFoundComponent } // Uncomment and create NotFoundComponent if needed
 ];

@@ -1,0 +1,90 @@
+<div class="article-page" *ngIf="article() as a">
+  <div class="banner">
+    <div class="container">
+      <h1>{{ a.title }}</h1>
+      <div class="article-meta">
+        <img [src]="a.author.image" class="user-img" alt="author" />
+        <div class="info">
+          <a class="author">{{ a.author.username }}</a>
+          <span class="date">{{ a.createdAt | date: 'mediumDate' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container page">
+    <div class="row article-content">
+      <div class="col-xs-12">
+        <div [innerHTML]="articleHtml()"></div>
+
+        <ul class="tag-list">
+          <li class="tag-default tag-pill tag-outline" *ngFor="let tag of a.tagList">{{ tag }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="article-actions">
+      <img [src]="a.author.image" class="user-img" alt="author" />
+      <div class="info">
+        <a class="author">{{ a.author.username }}</a>
+        <span class="date">{{ a.createdAt | date: 'mediumDate' }}</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-md-8 offset-md-2">
+
+        <ng-container *ngIf="(isAuthed | async); else loginPrompt">
+          <app-list-errors [errors]="errors()"></app-list-errors>
+
+          <form class="card comment-form" (ngSubmit)="addComment()">
+            <fieldset [disabled]="isSubmitting()">
+              <div class="card-block">
+                <textarea class="form-control"
+                  placeholder="Write a comment..."
+                  rows="3"
+                  [ngModel]="commentBody()"
+                  (ngModelChange)="commentBody.set($event)"
+                  name="commentBody"></textarea>
+              </div>
+              <div class="card-footer">
+                <img [src]="currentUser()?.image || ''" class="comment-author-img" />
+                <button class="btn btn-sm btn-primary" type="submit">Post Comment</button>
+              </div>
+            </fieldset>
+          </form>
+        </ng-container>
+
+        <ng-template #loginPrompt>
+          <a routerLink="/login">Sign in</a> or <a routerLink="/register">sign up</a> to add comments on this article.
+        </ng-template>
+
+        <div class="card" *ngFor="let cmt of comments(); let i = index">
+          <div class="card-block">
+            <p class="card-text">{{ cmt.body }}</p>
+          </div>
+          <div class="card-footer">
+            <a class="comment-author">
+              <img [src]="cmt.author?.image" class="comment-author-img" />
+            </a>
+            <a class="comment-author">{{ cmt.author?.username }}</a>
+            <span class="date-posted">{{ cmt.createdAt | date: 'mediumDate' }}</span>
+
+            <span class="mod-options" *ngIf="isOwner(cmt)">
+              <i class="ion-trash-a" title="Delete" (click)="deleteComment(cmt, i)"></i>
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container page" *ngIf="!article()">
+  <p>Loading article...</p>
+  </div>
+
+

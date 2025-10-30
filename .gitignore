@@ -40,3 +40,8 @@ src/js/config/app.templates.js
 
 
 .angular/*
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/

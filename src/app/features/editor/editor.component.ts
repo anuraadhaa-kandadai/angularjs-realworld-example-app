@@ -76,9 +76,9 @@ export class EditorComponent implements OnInit, OnDestroy {
         // Navigate to the article page
         this.router.navigateByUrl('/article/' + article.slug);
         // Then navigate to the home page after a short delay
-        setTimeout(() => {
-          this.router.navigateByUrl('/');
-        }, 100);
+        // setTimeout(() => {
+        //   this.router.navigateByUrl('/');
+        // }, 100);
       }),
       catchError(err => {
         this.errors = err;
