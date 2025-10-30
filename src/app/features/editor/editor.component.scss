@@ -1,0 +1,10 @@
+/* Add any component-specific styles here */
+.editor-page {
+  .tag-list {
+    margin-top: 10px;
+    .tag-default {
+      margin-right: 5px;
+      cursor: pointer;
+    }
+  }
+}

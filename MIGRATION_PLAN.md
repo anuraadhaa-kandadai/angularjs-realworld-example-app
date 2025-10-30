@@ -131,18 +131,59 @@ src/
 
 **Folder Status:** 🟡 In Progress
 
+**Component Plan Summary: AppConstants**
+- Convert AngularJS constants to TypeScript constants or enums
+- Update import statements in all files using these constants
+- Risk level: LOW
+
+For full details, refer to `migration-plans/config/app-constants.plan.md`
+
+**Component Plan Summary: AppConfig**
+- Migrate AngularJS routing configuration to Angular Router
+- Update HTML5 mode configuration
+- Convert any additional configuration logic
+- Risk level: MEDIUM
+
+For full details, refer to `migration-plans/config/app-config.plan.md`
+
+**Component Plan Summary: AuthInterceptor**
+- Convert AngularJS HTTP interceptor to Angular HttpInterceptor
+- Replace $q promises with RxJS Observables
+- Update error handling and request/response manipulation
+- Risk level: MEDIUM
+
+For full details, refer to `migration-plans/config/auth-interceptor.plan.md`
+
 ### Folder: services
 
 | AngularJS File | Angular File(s) | Type | Phase | Status | Component Plan |
 |---------------|-----------------|------|-------|--------|----------------|
 | `articles.service.js` | `articles.service.ts` | Service | 2 | 🟡 In Progress | `migration-plans/services/articles.service.plan.md` |
 | `comments.service.js` | `comments.service.ts` | Service | 2 | 🔴 Pending | `migration-plans/services/comments-service.plan.md` |
-| `jwt.service.js` | `jwt.service.ts` | Service | 1 | 🟡 In Progress | `migration-plans/services/jwt-service.plan.md` |
+| `jwt.service.js` | `jwt.service.ts` | Service | 1 | 🟡 In Progress | `migration-plans/services/jwt.service.plan.md` |
 | `profile.service.js` | `profile.service.ts` | Service | 2 | 🔴 Pending | `migration-plans/services/profile-service.plan.md` |
 | `tags.service.js` | `tags.service.ts` | Service | 2 | 🔴 Pending | `migration-plans/services/tags-service.plan.md` |
 | `user.service.js` | `user.service.ts` | Service | 2 | 🟢 Completed | `migration-plans/services/user.service.plan.md` |
 
 **Folder Status:** 🟡 In Progress
+
+**Component Plan Summary: JWT Service**
+- Migrate from AngularJS service to Angular service using @Injectable decorator
+- Replace $window with direct localStorage usage
+- Update AppConstants import and usage
+- Implement error handling for localStorage operations
+- Risk level: MEDIUM (due to AppConstants dependency and core auth functionality)
+
+For full details, refer to `migration-plans/services/jwt.service.plan.md`
+
+**Validation Checklist:**
+- [ ] Service structure set up with @Injectable decorator
+- [ ] All methods migrated (save, get, destroy)
+- [ ] AppConstants dependency correctly imported and used
+- [ ] Error handling implemented for localStorage operations
+- [ ] Unit tests created and passing
+- [ ] Integration tests with UserService and AuthInterceptor passing
+- [ ] No AngularJS dependencies remain
 
 **Component Plan Summary: Articles Service**
 - Migrate from AngularJS to Angular service using @Injectable decorator
@@ -213,11 +254,48 @@ For full details, refer to `migration-plans/services/articles.service.plan.md`
 
 | AngularJS File | Angular File(s) | Type | Phase | Status | Component Plan |
 |---------------|-----------------|------|-------|--------|----------------|
-| `editor.config.js` | `editor-routing.module.ts` | Routing | 5 | 🔴 Pending | `migration-plans/editor/editor-routing.plan.md` |
-| `editor.controller.js` | `editor.component.ts` | Component | 5 | 🟡 In Progress | `migration-plans/editor/editor.plan.md` |
-| `index.js` | `editor.module.ts` | Module | 5 | 🔴 Pending | `migration-plans/editor/editor-module.plan.md` |
+| `editor.config.js` | `editor-routing.module.ts` | Routing | 5 | 🟡 In Progress | `migration-plans/editor/editor-routing.plan.md` |
+| `editor.controller.js` | `editor.component.ts` | Component | 5 | 🟢 Completed | `migration-plans/editor/editor.plan.md` |
+| `index.js` | `editor.module.ts` | Module | 5 | 🟡 In Progress | `migration-plans/editor/editor-module.plan.md` |
 
 **Folder Status:** 🟡 In Progress
+
+**Component Plan Summary: Editor Component**
+- Migrated from AngularJS controller to Angular component
+- Implemented Reactive Forms for complex form handling
+- Converted $http and promise-based calls to HttpClient and Observables
+- Updated template syntax to Angular standards
+- Implemented proper error handling and validation
+- Risk level: MEDIUM (due to complex form handling and service dependencies)
+
+For full details, refer to `migration-plans/editor/editor.plan.md`
+
+**Validation Checklist:**
+- [x] Component structure set up with @Component decorator
+- [x] Reactive Forms implemented for editor form
+- [x] All methods migrated to use HttpClient and Observables
+- [x] Template updated to use Angular syntax
+- [x] Error handling and validation implemented
+- [x] Unit tests created and passing
+- [ ] Integration tests with ArticlesService and TagsService passing
+- [x] No AngularJS dependencies remain
+
+**Routing Plan Summary:**
+- Migrate from AngularJS ui-router to Angular Router
+- Update route configuration for editor feature
+- Implement route guards for authentication
+- Risk level: LOW
+
+For full details, refer to `migration-plans/editor/editor-routing.plan.md`
+
+**Module Plan Summary:**
+- Create EditorModule as a feature module
+- Import necessary Angular modules (ReactiveFormsModule, RouterModule)
+- Declare and export EditorComponent
+- Import and configure EditorRoutingModule
+- Risk level: LOW
+
+For full details, refer to `migration-plans/editor/editor-module.plan.md`
 
 ### Folder: home
 
@@ -300,6 +378,13 @@ For full details, refer to `migration-plans/services/articles.service.plan.md`
 
 **Status:** 🟡 In Progress
 
+**Progress:**
+- AppConstants: Migration plan created, implementation pending
+- JWT Service: Migration plan created, implementation pending
+- AppConfig: Migration plan created, implementation pending
+- AuthInterceptor: Migration plan created, implementation pending
+- AppInitializer: Pending
+
 ### Phase 2: User Service and Dependencies
 
 **Planned Migration Steps:**
@@ -339,21 +424,31 @@ For full details, refer to `migration-plans/services/articles.service.plan.md`
 
 ## Next Steps
 
-1. Complete migration plans for remaining components
-2. Prioritize the migration of JWT service and AppConstants
+1. ~~Complete migration plans for remaining components~~ (Ongoing)
+2. ~~Prioritize the migration of JWT service and AppConstants~~ (In Progress)
 3. ~~Proceed with the UserService migration~~ (Completed)
-4. Review and update auth component migration plan to account for UserService dependencies
-5. Review and update testing strategies
-6. Develop a detailed plan for state management implementation
-7. Create a timeline for the migration process
-8. Prepare handoff documentation for executor agents
-9. Continue with the migration of other services:
-   - ArticlesService (In Progress)
-   - CommentsService
-   - ProfileService
-   - TagsService
-10. Begin migration of feature components (Home, Editor, Profile, etc.)
-11. Update all components using ArticlesService to handle Observables
+4. ~~Review and update auth component migration plan to account for UserService dependencies~~ (Completed)
+5. ~~Create migration plan for AppConstants~~ (Completed)
+6. ~~Create migration plan for AppConfig~~ (Completed)
+7. ~~Create migration plan for AuthInterceptor~~ (Completed)
+8. Implement AppConstants migration based on the created plan
+9. Implement JWT Service migration based on the created plan
+10. Implement AppConfig migration based on the created plan
+11. Implement AuthInterceptor migration based on the created plan
+12. Review and update ArticlesService migration plan
+13. Review and update TagsService migration plan
+14. Begin planning Auth feature module migration
+15. Review and update testing strategies
+16. Develop a detailed plan for state management implementation
+17. Create a timeline for the migration process
+18. Prepare handoff documentation for executor agents
+19. Continue with the migration of other services:
+    - ArticlesService (In Progress)
+    - CommentsService
+    - ProfileService
+    - TagsService
+20. Begin migration of feature components (Home, Editor, Profile, etc.)
+21. Update all components using ArticlesService to handle Observables
 
 ---
 

@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments';
+import { JwtService } from './jwt.service';
 
 export interface User {
   username: string;
@@ -19,18 +20,23 @@ export interface User {
 export class UserService {
   private http = inject(HttpClient);
   private router = inject(Router);
+  private jwtService = inject(JwtService);
 
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser = this.currentUserSubject.asObservable();
-
-  private tokenKey = 'jwtToken';
 
   constructor() {
     this.loadUser();
   }
 
+  get isAuthenticated(): Observable<boolean> {
+    return this.currentUser.pipe(
+      map(user => !!user)
+    );
+  }
+
   loadUser(): void {
-    const token = localStorage.getItem(this.tokenKey);
+    const token = this.jwtService.get();
     if (token) {
       this.http.get<User>(`${environment.apiUrl}/user`, {
         headers: { Authorization: `Token ${token}` }
@@ -80,12 +86,12 @@ export class UserService {
     console.log('Setting auth for user:', userData);
     const user: User = userData.user || userData;
     this.currentUserSubject.next(user);
-    localStorage.setItem(this.tokenKey, user.token);
+    this.jwtService.save(user.token);
   }
 
   purgeAuth(): void {
     this.currentUserSubject.next(null);
-    localStorage.removeItem(this.tokenKey);
+    this.jwtService.destroy();
   }
 
   logout(): void {
