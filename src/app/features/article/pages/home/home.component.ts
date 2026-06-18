@@ -45,14 +45,24 @@ export default class HomeComponent implements OnInit {
     this.userService.isAuthenticated
       .pipe(
         tap((isAuthenticated) => {
-          // Store the authentication state first
+          // Store the previous authentication state to detect changes
+          const wasAuthenticated = this.isAuthenticated;
           this.isAuthenticated = isAuthenticated;
           
-          // Force a fresh config object to ensure article-list component detects the change
-          if (isAuthenticated) {
-            this.setListTo("feed");
+          // Trigger feed refresh when authentication state changes
+          if (isAuthenticated !== wasAuthenticated) {
+            if (isAuthenticated) {
+              this.setListToWithRefresh("feed");
+            } else {
+              this.setListToWithRefresh("all");
+            }
           } else {
-            this.setListTo("all");
+            // Initial load - set list type without forcing refresh
+            if (isAuthenticated) {
+              this.setListTo("feed");
+            } else {
+              this.setListTo("all");
+            }
           }
         }),
         takeUntilDestroyed(this.destroyRef),
@@ -67,11 +77,23 @@ export default class HomeComponent implements OnInit {
       return;
     }
 
-    // Always create a completely new config object with a timestamp to ensure
-    // the article-list component's setter is triggered even if the type is the same
+    // Otherwise, set the list object
+    this.listConfig = { type: type, filters: filters };
+  }
+
+  setListToWithRefresh(type: string = "", filters: Object = {}): void {
+    // If feed is requested but user is not authenticated, redirect to login
+    if (type === "feed" && !this.isAuthenticated) {
+      void this.router.navigate(["/login"]);
+      return;
+    }
+
+    // Create a new config object to trigger change detection in ArticleListComponent
+    // Add a timestamp to ensure the object reference changes
     this.listConfig = { 
       type: type, 
-      filters: { ...filters, _refreshToken: Date.now() }
+      filters: { ...filters },
+      refreshTrigger: Date.now()
     };
   }
 }
