@@ -21,14 +21,15 @@ class ArticleListCtrl {
     // Set the current list to an empty array
     this.list = [];
 
-    // Set listConfig to the new list's config
-    this.listConfig = newList;
+    // Create a new object reference instead of direct assignment to ensure change detection
+    this.listConfig = Object.assign({}, newList);
 
     this.runQuery();
   }
 
   setPageTo(pageNumber) {
-    this.listConfig.currentPage = pageNumber;
+    // Create new listConfig object to trigger change detection
+    this.listConfig = Object.assign({}, this.listConfig, { currentPage: pageNumber });
 
     this.runQuery();
   }
