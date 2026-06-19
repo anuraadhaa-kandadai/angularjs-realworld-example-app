@@ -1,10 +1,16 @@
 class FavoriteBtnCtrl {
-  constructor(User, Articles, $state) {
+  constructor(User, Articles, $state, $scope) {
     'ngInject';
 
     this._User = User;
     this._Articles = Articles;
     this._$state = $state;
+    this.isAuthenticated = !!User.current;
+
+    // Watch for authentication state changes
+    $scope.$watch(() => User.current, (newUser) => {
+      this.isAuthenticated = !!newUser;
+    });
 
   }
 

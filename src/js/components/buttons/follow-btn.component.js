@@ -1,11 +1,16 @@
 class FollowBtnCtrl {
-  constructor(Profile, User, $state) {
+  constructor(Profile, User, $state, $scope) {
     'ngInject';
 
     this._Profile = Profile;
     this._User = User;
-
     this._$state = $state;
+    this.isAuthenticated = !!User.current;
+
+    // Watch for authentication state changes
+    $scope.$watch(() => User.current, (newUser) => {
+      this.isAuthenticated = !!newUser;
+    });
   }
 
   submit() {
