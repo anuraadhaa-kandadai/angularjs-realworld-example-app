@@ -1,5 +1,5 @@
 export default class User {
-  constructor(JWT, AppConstants, $http, $state, $q) {
+  constructor(JWT, AppConstants, $http, $state, $q, $rootScope) {
     'ngInject';
 
     this._JWT = JWT;
@@ -7,11 +7,29 @@ export default class User {
     this._$http = $http;
     this._$state = $state;
     this._$q = $q;
+    this._$rootScope = $rootScope;
 
     this.current = null;
 
   }
 
+  // Add method to set authentication state and notify components
+  setAuth(user) {
+    const wasAuthenticated = !!this.current;
+    const isAuthenticated = !!user;
+    
+    this.current = user;
+    
+    // Broadcast authentication state change if status changed
+    if (wasAuthenticated !== isAuthenticated) {
+      console.log('Authentication state changed:', { wasAuthenticated, isAuthenticated, user });
+      this._$rootScope.$broadcast('authenticationStateChanged', { 
+        isAuthenticated: isAuthenticated,
+        user: user,
+        previousAuthState: wasAuthenticated
+      });
+    }
+  }
 
   attemptAuth(type, credentials) {
     let route = (type === 'login') ? '/login' : '';
@@ -24,7 +42,8 @@ export default class User {
     }).then(
       (res) => {
         this._JWT.save(res.data.user.token);
-        this.current = res.data.user;
+        // Use setAuth to trigger authentication change event
+        this.setAuth(res.data.user);
 
         return res;
       }
@@ -38,14 +57,16 @@ export default class User {
       data: { user: fields }
     }).then(
       (res) => {
-        this.current = res.data.user;
+        // Use setAuth to trigger authentication change event
+        this.setAuth(res.data.user);
         return res.data.user;
       }
     )
   }
 
   logout() {
-    this.current = null;
+    // Use setAuth to trigger authentication change event before clearing state
+    this.setAuth(null);
     this._JWT.destroy();
     this._$state.go(this._$state.$current, null, { reload: true });
   }
@@ -71,7 +92,8 @@ export default class User {
         }
       }).then(
         (res) => {
-          this.current = res.data.user;
+          // Use setAuth to trigger authentication change event
+          this.setAuth(res.data.user);
           deferred.resolve(true);
         },
 
