@@ -2,6 +2,7 @@
   ng-class="{ 'disabled' : $ctrl.isSubmitting,
               'btn-outline-primary': !$ctrl.article.favorited,
               'btn-primary': $ctrl.article.favorited }"
-  ng-click="$ctrl.submit()">
+  ng-click="$ctrl.submit()"
+  ng-show="$ctrl.isAuthenticated">
   <i class="ion-heart"></i> <ng-transclude></ng-transclude>
 </button>

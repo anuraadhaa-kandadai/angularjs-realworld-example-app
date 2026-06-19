@@ -2,9 +2,14 @@
   <article-meta article="$ctrl.article">
     <favorite-btn
       article="$ctrl.article"
-      class="pull-xs-right">
+      class="pull-xs-right"
+      ng-if="$ctrl.isAuthenticated">
       {{$ctrl.article.favoritesCount}}
     </favorite-btn>
+    <!-- Show favorited count without button for unauthenticated users -->
+    <span class="btn btn-sm btn-outline-primary pull-xs-right" ng-if="!$ctrl.isAuthenticated">
+      <i class="ion-heart"></i> {{$ctrl.article.favoritesCount}}
+    </span>
   </article-meta>
 
   <a ui-sref="app.article({ slug: $ctrl.article.slug })" class="preview-link">
