@@ -1,4 +1,5 @@
 <button class="btn btn-sm"
+  ng-show="$ctrl.isAuthenticated"
   ng-class="{ 'disabled' : $ctrl.isSubmitting,
               'btn-outline-primary': !$ctrl.article.favorited,
               'btn-primary': $ctrl.article.favorited }"
