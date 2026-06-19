@@ -1,11 +1,11 @@
 class ArticleListCtrl {
-  constructor(Articles, $scope) {
+  constructor(Articles, User, $scope) {
     'ngInject';
 
     this._Articles = Articles;
+    this._User = User;
 
     this.setListTo(this.listConfig);
-
 
     $scope.$on('setListTo', (ev, newList) => {
       this.setListTo(newList);
@@ -14,6 +14,18 @@ class ArticleListCtrl {
     $scope.$on('setPageTo', (ev, pageNumber) => {
       this.setPageTo(pageNumber);
     });
+
+    // Watch for authentication changes to refresh articles
+    $scope.$watch(
+      () => this._User.current,
+      (newUser, oldUser) => {
+        // If authentication state changed after initial load
+        if (newUser !== oldUser && this.list && this.list.length > 0) {
+          // Re-run query to get updated article data with auth context
+          this.runQuery();
+        }
+      }
+    );
 
   }
 

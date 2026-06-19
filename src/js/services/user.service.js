@@ -1,5 +1,5 @@
 export default class User {
-  constructor(JWT, AppConstants, $http, $state, $q) {
+  constructor(JWT, AppConstants, $http, $state, $q, $rootScope) {
     'ngInject';
 
     this._JWT = JWT;
@@ -7,6 +7,7 @@ export default class User {
     this._$http = $http;
     this._$state = $state;
     this._$q = $q;
+    this._$rootScope = $rootScope;
 
     this.current = null;
 
@@ -26,6 +27,9 @@ export default class User {
         this._JWT.save(res.data.user.token);
         this.current = res.data.user;
 
+        // Broadcast authentication change event
+        this._$rootScope.$broadcast('user:authenticated', this.current);
+
         return res;
       }
     );
@@ -39,6 +43,10 @@ export default class User {
     }).then(
       (res) => {
         this.current = res.data.user;
+        
+        // Broadcast user update event
+        this._$rootScope.$broadcast('user:updated', this.current);
+        
         return res.data.user;
       }
     )
@@ -47,6 +55,10 @@ export default class User {
   logout() {
     this.current = null;
     this._JWT.destroy();
+    
+    // Broadcast logout event
+    this._$rootScope.$broadcast('user:logout');
+    
     this._$state.go(this._$state.$current, null, { reload: true });
   }
 
@@ -72,6 +84,10 @@ export default class User {
       }).then(
         (res) => {
           this.current = res.data.user;
+          
+          // Broadcast authentication verification success
+          this._$rootScope.$broadcast('user:verified', this.current);
+          
           deferred.resolve(true);
         },
 
