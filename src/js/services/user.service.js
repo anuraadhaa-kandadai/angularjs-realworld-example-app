@@ -1,5 +1,5 @@
 export default class User {
-  constructor(JWT, AppConstants, $http, $state, $q) {
+  constructor(JWT, AppConstants, $http, $state, $q, $rootScope) {
     'ngInject';
 
     this._JWT = JWT;
@@ -7,6 +7,7 @@ export default class User {
     this._$http = $http;
     this._$state = $state;
     this._$q = $q;
+    this._$rootScope = $rootScope;
 
     this.current = null;
 
@@ -25,6 +26,9 @@ export default class User {
       (res) => {
         this._JWT.save(res.data.user.token);
         this.current = res.data.user;
+        
+        // Broadcast authentication event to notify components
+        this._$rootScope.$broadcast('userAuthenticated', this.current);
 
         return res;
       }
@@ -47,6 +51,10 @@ export default class User {
   logout() {
     this.current = null;
     this._JWT.destroy();
+    
+    // Broadcast logout event to notify components
+    this._$rootScope.$broadcast('userLoggedOut');
+    
     this._$state.go(this._$state.$current, null, { reload: true });
   }
 
@@ -72,6 +80,8 @@ export default class User {
       }).then(
         (res) => {
           this.current = res.data.user;
+          // Broadcast authentication event when user is verified
+          this._$rootScope.$broadcast('userAuthenticated', this.current);
           deferred.resolve(true);
         },
 

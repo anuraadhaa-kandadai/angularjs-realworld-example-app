@@ -1,11 +1,11 @@
 class ArticleListCtrl {
-  constructor(Articles, $scope) {
+  constructor(Articles, $scope, User) {
     'ngInject';
 
     this._Articles = Articles;
+    this._User = User;
 
     this.setListTo(this.listConfig);
-
 
     $scope.$on('setListTo', (ev, newList) => {
       this.setListTo(newList);
@@ -13,6 +13,23 @@ class ArticleListCtrl {
 
     $scope.$on('setPageTo', (ev, pageNumber) => {
       this.setPageTo(pageNumber);
+    });
+
+    // Listen for authentication state changes and refresh if needed
+    $scope.$on('userAuthenticated', () => {
+      // If we're showing 'all' feed but user is now authenticated, 
+      // we might need to refresh to show proper authenticated content
+      if (this.listConfig && this.listConfig.type === 'all') {
+        this.runQuery();
+      }
+    });
+
+    $scope.$on('userLoggedOut', () => {
+      // If we're showing 'feed' but user is now logged out, 
+      // we need to refresh to show public content
+      if (this.listConfig && this.listConfig.type === 'feed') {
+        this.runQuery();
+      }
     });
 
   }
@@ -67,6 +84,10 @@ class ArticleListCtrl {
           this.list = res.articles;
 
           this.listConfig.totalPages = Math.ceil(res.articlesCount / this.limit);
+        },
+        (err) => {
+          this.loading = false;
+          console.error('Error loading articles:', err);
         }
       );
   }
